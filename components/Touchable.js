@@ -5,21 +5,21 @@
 
 import React, { Component } from 'react';
 import {
-  TouchableOpacity, TouchableNativeFeedback, View, Platform
+  TouchableOpacity, TouchableNativeFeedback, View, Platform, StyleSheet
 } from 'react-native';
 
-export default function Touchable({children, ...props}) {
+export default function Touchable({onPress, ...props}) {
   if(Platform.OS !== 'ios')
     return (
       <TouchableNativeFeedback
+        onPress={onPress}
         background={TouchableNativeFeedback.SelectableBackground()}
-        {...props}
       >
-        <View children={children}/>
+        <View {...props}/>
       </TouchableNativeFeedback>
     );
   else
     return (
-      <TouchableOpacity {...props} children={children} />
+      <TouchableOpacity onPress={onPress} {...props} />
     );
 }
