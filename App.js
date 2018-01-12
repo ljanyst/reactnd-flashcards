@@ -10,12 +10,22 @@ import {
 import { StackNavigator } from 'react-navigation';
 import { Constants } from 'expo';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 
 import { coral, white } from './utils/styles';
+import { fetchData } from './utils/api';
+import { deckSetDb } from './actions';
+import reducer from './reducers';
 
 import DeckList from './components/DeckList';
 import DeckAdd from './components/DeckAdd';
 import Touchable from './components/Touchable';
+
+//------------------------------------------------------------------------------
+// Redux
+//------------------------------------------------------------------------------
+const store = createStore(reducer);
 
 //------------------------------------------------------------------------------
 // Stylesheet
@@ -89,14 +99,26 @@ const MainNavigator = StackNavigator({
 // The main component
 //------------------------------------------------------------------------------
 export default class App extends Component {
+  //----------------------------------------------------------------------------
+  // Component mounted
+  //----------------------------------------------------------------------------
+  componentDidMount() {
+    fetchData().then(deckSetDb);
+  }
+
+  //----------------------------------------------------------------------------
+  // Renderer
+  //----------------------------------------------------------------------------
   render() {
     return (
-      <View style={{flex: 1}}>
-        <FlashCardsStatusBar
-          backgroundColor={coral}
-          barStyle='light-content'/>
-        <MainNavigator/>
-      </View>
+      <Provider store={store}>
+        <View style={{flex: 1}}>
+          <FlashCardsStatusBar
+            backgroundColor={coral}
+            barStyle='light-content'/>
+          <MainNavigator/>
+        </View>
+      </Provider>
     );
   }
 }
