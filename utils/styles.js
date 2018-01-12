@@ -10,6 +10,7 @@ import { StyleSheet, Platform } from 'react-native';
 //------------------------------------------------------------------------------
 export const coral='#ff7f50';
 export const white = '#fff';
+export const gray = '#777';
 
 //------------------------------------------------------------------------------
 // Button Styles
