@@ -11,9 +11,10 @@ import { StackNavigator } from 'react-navigation';
 import { Constants } from 'expo';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 
-import { coral, white } from './utils/colors';
+import { coral, white } from './utils/styles';
 
 import DeckList from './components/DeckList';
+import DeckAdd from './components/DeckAdd';
 import Touchable from './components/Touchable';
 
 //------------------------------------------------------------------------------
@@ -44,17 +45,19 @@ function FlashCardsStatusBar( {backgroundColor, ...props} ) {
 //------------------------------------------------------------------------------
 // Add deck button
 //------------------------------------------------------------------------------
-const addDeckBtn = (
-  <View style={styles.navBarBtnContainer}>
-    <Touchable onPress={() => alert('!!!')}>
-      {
-        Platform.OS === 'ios'
-          ? <Ionicons name='ios-add' size={32} style={styles.navBarBtn}/>
-          : <MaterialIcons name='add' size={32} style={styles.navBarBtn}/>
-      }
-    </Touchable>
-  </View>
-);
+function addDeckBtn(navigation) {
+  return (
+    <View style={styles.navBarBtnContainer}>
+      <Touchable onPress={() => navigation.navigate('DeckAdd')}>
+        {
+          Platform.OS === 'ios'
+            ? <Ionicons name='ios-add' size={32} style={styles.navBarBtn}/>
+            : <MaterialIcons name='add' size={32} style={styles.navBarBtn}/>
+        }
+      </Touchable>
+    </View>
+  );
+}
 
 //------------------------------------------------------------------------------
 // Main navigator
@@ -64,7 +67,13 @@ const MainNavigator = StackNavigator({
     screen: DeckList,
     navigationOptions: ({navigation}) => ({
       title: 'Your decks',
-      headerRight: addDeckBtn
+      headerRight: addDeckBtn(navigation)
+    })
+  },
+  DeckAdd: {
+    screen: DeckAdd,
+    navigationOptions: ({navigation}) => ({
+      title: 'Create a deck'
     })
   }
 }, {
