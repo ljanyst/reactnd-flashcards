@@ -50,7 +50,7 @@ class DeckAdd extends Component {
     }
 
     this.props.deckCreate(name);
-    this.props.navigation.navigate('DeckList');
+    this.props.navigation.goBack();
   }
 
   //----------------------------------------------------------------------------
