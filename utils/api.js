@@ -19,3 +19,19 @@ export function fetchData() {
       return data;
     });
 }
+
+//------------------------------------------------------------------------------
+// Create deck
+//------------------------------------------------------------------------------
+export function deckCreate(deckName) {
+  return fetchData()
+    .then(data => ({
+      ...data,
+      [deckName]: {
+        title: deckName,
+        questions: []
+      }
+    }))
+    .then(JSON.stringify)
+    .then(data => AsyncStorage.setItem(STORAGE_KEY, data));
+}
