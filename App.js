@@ -163,7 +163,7 @@ export default class App extends Component {
   // Component mounted
   //----------------------------------------------------------------------------
   componentDidMount() {
-    fetchData().then(deckSetDb);
+    fetchData().then(data => store.dispatch(deckSetDb(data)));
   }
 
   //----------------------------------------------------------------------------
