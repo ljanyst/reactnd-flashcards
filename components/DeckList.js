@@ -5,9 +5,10 @@
 
 import React, { Component } from 'react';
 import { View, Text, FlatList, StyleSheet, Platform } from 'react-native';
+import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { connect } from 'react-redux';
 
-import { white, coral, gray } from '../utils/styles';
+import { white, coral, gray, navBarStyles } from '../utils/styles';
 
 import Touchable from './Touchable';
 
@@ -47,6 +48,23 @@ const styles = StyleSheet.create({
 });
 
 //------------------------------------------------------------------------------
+// Add deck button
+//------------------------------------------------------------------------------
+function addDeckBtn(navigation) {
+  return (
+    <View style={navBarStyles.btnContainer}>
+      <Touchable onPress={() => navigation.navigate('DeckAdd')}>
+        {
+          Platform.OS === 'ios'
+            ? <Ionicons name='ios-add' size={28} style={navBarStyles.button}/>
+            : <MaterialIcons name='add' size={28} style={navBarStyles.button}/>
+        }
+      </Touchable>
+    </View>
+  );
+}
+
+//------------------------------------------------------------------------------
 // Render item
 //------------------------------------------------------------------------------
 function itemView(item, navigation) {
@@ -65,6 +83,9 @@ function itemView(item, navigation) {
 // Deck List
 //------------------------------------------------------------------------------
 class DeckList extends Component {
+  //----------------------------------------------------------------------------
+  // Render
+  //----------------------------------------------------------------------------
   render() {
     return (
       <FlatList
@@ -94,4 +115,18 @@ function mapDispatchToProps(dispatch) {
   return {};
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DeckList);
+const _DeckList = connect(mapStateToProps, mapDispatchToProps)(DeckList);
+export default _DeckList;
+
+//------------------------------------------------------------------------------
+// Navbar
+//------------------------------------------------------------------------------
+export function deckListNavBar() {
+  return {
+    screen: _DeckList,
+    navigationOptions: ({navigation}) => ({
+      title: 'Your decks',
+      headerRight: addDeckBtn(navigation)
+      })
+  };
+}
