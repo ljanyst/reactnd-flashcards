@@ -93,4 +93,17 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DeckAdd);
+const _DeckAdd = connect(mapStateToProps, mapDispatchToProps)(DeckAdd);
+export default _DeckAdd;
+
+//------------------------------------------------------------------------------
+// Navbar
+//------------------------------------------------------------------------------
+export function deckAddNavBar() {
+  return  {
+    screen: _DeckAdd,
+    navigationOptions: ({navigation}) => ({
+      title: 'Create a deck'
+    })
+  };
+}
