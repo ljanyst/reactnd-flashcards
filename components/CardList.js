@@ -4,8 +4,76 @@
 //------------------------------------------------------------------------------
 
 import React, { Component } from 'react';
-import { View, Text} from 'react-native';
+import { View, Text, Platform } from 'react-native';
 import { connect } from 'react-redux';
+import {
+  MaterialIcons, Ionicons, MaterialCommunityIcons
+} from '@expo/vector-icons';
+
+import { navBarStyles } from '../utils/styles';
+
+import Touchable from './Touchable';
+
+//------------------------------------------------------------------------------
+// Add deck control buttons
+//------------------------------------------------------------------------------
+function deckControl(navigation) {
+  return (
+    <View style={navBarStyles.btnsContainer}>
+      <View style={navBarStyles.btnContainer}>
+        <Touchable onPress={() => {}}>
+          {
+            Platform.OS === 'ios'
+              ? <Ionicons
+                  name='ios-school-outline'
+                  size={28}
+                  style={navBarStyles.button}
+                />
+              : <MaterialIcons
+                  name='school'
+                  size={28}
+                  style={navBarStyles.button}
+                />
+          }
+        </Touchable>
+      </View>
+      <View style={navBarStyles.btnContainer}>
+        <Touchable onPress={() => {}}>
+          {
+            Platform.OS === 'ios'
+              ? <Ionicons
+                  name='ios-trash-outline'
+                  size={28}
+                  style={navBarStyles.button}
+                />
+              : <MaterialIcons
+                  name='delete'
+                  size={28}
+                  style={navBarStyles.button}
+                />
+          }
+        </Touchable>
+      </View>
+      <View style={navBarStyles.btnContainer}>
+        <Touchable onPress={() => {}}>
+          {
+            Platform.OS === 'ios'
+              ? <Ionicons
+                  name='ios-add'
+                  size={28}
+                  style={navBarStyles.button}
+                />
+              : <MaterialIcons
+                  name='add'
+                  size={28}
+                  style={navBarStyles.button}
+                />
+          }
+        </Touchable>
+      </View>
+    </View>
+  );
+}
 
 //------------------------------------------------------------------------------
 // Card List
@@ -31,4 +99,18 @@ function mapDispatchToProps(dispatch) {
   return {};
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CardList);
+const _CardList = connect(mapStateToProps, mapDispatchToProps)(CardList);
+export default _CardList;;
+
+//------------------------------------------------------------------------------
+// Navbar
+//------------------------------------------------------------------------------
+export function cardListNavBar() {
+  return {
+    screen: _CardList,
+    navigationOptions: ({navigation}) => ({
+      title: navigation.state.params.cardId,
+      headerRight: deckControl(navigation)
+    })
+  };
+}
