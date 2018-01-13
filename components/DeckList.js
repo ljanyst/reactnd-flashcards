@@ -49,9 +49,12 @@ const styles = StyleSheet.create({
 //------------------------------------------------------------------------------
 // Render item
 //------------------------------------------------------------------------------
-function itemView({item}) {
+function itemView(item, navigation) {
   return (
-    <Touchable  style={styles.item}>
+    <Touchable
+      style={styles.item}
+      onPress={() => navigation.navigate('CardList', {cardId: item.key})}
+    >
       <Text style={styles.title}>{item.title}</Text>
       <Text style={styles.cardCounter}>Cards: {item.numCards}</Text>
     </Touchable>
@@ -66,7 +69,7 @@ class DeckList extends Component {
     return (
       <FlatList
         data={this.props.deckList}
-        renderItem={itemView}
+        renderItem={({item}) => itemView(item, this.props.navigation)}
       />
     );
   }

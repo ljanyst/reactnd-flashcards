@@ -9,7 +9,9 @@ import {
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import { Constants } from 'expo';
-import { MaterialIcons, Ionicons } from '@expo/vector-icons';
+import {
+  MaterialIcons, Ionicons, MaterialCommunityIcons
+} from '@expo/vector-icons';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 
@@ -20,6 +22,7 @@ import reducer from './reducers';
 
 import DeckList from './components/DeckList';
 import DeckAdd from './components/DeckAdd';
+import CardList from './components/CardList';
 import Touchable from './components/Touchable';
 
 //------------------------------------------------------------------------------
@@ -33,11 +36,14 @@ const store = createStore(reducer);
 const navBarFgColor = Platform.OS === 'ios' ? coral : white;
 const navBarBgColor = Platform.OS === 'ios' ? white : coral;
 const styles = StyleSheet.create({
+  navBarBtnsContainer: {
+    flexDirection: 'row'
+  },
   navBarBtn: {
     color: navBarFgColor
   },
   navBarBtnContainer: {
-    marginRight: 12
+    marginRight: 18
   }
 });
 
@@ -61,13 +67,59 @@ function addDeckBtn(navigation) {
       <Touchable onPress={() => navigation.navigate('DeckAdd')}>
         {
           Platform.OS === 'ios'
-            ? <Ionicons name='ios-add' size={32} style={styles.navBarBtn}/>
-            : <MaterialIcons name='add' size={32} style={styles.navBarBtn}/>
+            ? <Ionicons name='ios-add' size={28} style={styles.navBarBtn}/>
+            : <MaterialIcons name='add' size={28} style={styles.navBarBtn}/>
         }
       </Touchable>
     </View>
   );
 }
+
+//------------------------------------------------------------------------------
+// Add deck control buttons
+//------------------------------------------------------------------------------
+function deckControl(navigation) {
+  return (
+    <View style={styles.navBarBtnsContainer}>
+    <View style={styles.navBarBtnContainer}>
+      <Touchable onPress={() => {}}>
+        {
+          Platform.OS === 'ios'
+            ? <Ionicons
+                name='ios-school-outline'
+                size={28}
+                style={styles.navBarBtn}
+              />
+            : <MaterialIcons name='school' size={28} style={styles.navBarBtn}/>
+        }
+      </Touchable>
+    </View>
+    <View style={styles.navBarBtnContainer}>
+      <Touchable onPress={() => {}}>
+        {
+          Platform.OS === 'ios'
+            ? <Ionicons
+                name='ios-trash-outline'
+                size={28}
+                style={styles.navBarBtn}
+              />
+            : <MaterialIcons name='delete' size={28} style={styles.navBarBtn}/>
+        }
+      </Touchable>
+    </View>
+    <View style={styles.navBarBtnContainer}>
+      <Touchable onPress={() => {}}>
+        {
+          Platform.OS === 'ios'
+            ? <Ionicons name='ios-add' size={28} style={styles.navBarBtn}/>
+            : <MaterialIcons name='add' size={28} style={styles.navBarBtn}/>
+        }
+      </Touchable>
+    </View>
+    </View>
+  );
+}
+
 
 //------------------------------------------------------------------------------
 // Main navigator
@@ -85,7 +137,15 @@ const MainNavigator = StackNavigator({
     navigationOptions: ({navigation}) => ({
       title: 'Create a deck'
     })
+  },
+  CardList: {
+    screen: CardList,
+    navigationOptions: ({navigation}) => ({
+      title: `Deck: ${navigation.state.params.cardId}`,
+      headerRight: deckControl(navigation)
+    })
   }
+
 }, {
   navigationOptions: ({navigation}) => ({
     headerTintColor: navBarFgColor,
