@@ -13,6 +13,24 @@ export const white = '#fff';
 export const gray = '#777';
 
 //------------------------------------------------------------------------------
+// Navbar
+//------------------------------------------------------------------------------
+export const navBarFgColor = Platform.OS === 'ios' ? coral : white;
+export const navBarBgColor = Platform.OS === 'ios' ? white : coral;
+
+export const navBarStyles = StyleSheet.create({
+  btnsContainer: {
+    flexDirection: 'row'
+  },
+  button: {
+    color: navBarFgColor
+  },
+  btnContainer: {
+    marginRight: 18
+  }
+});
+
+//------------------------------------------------------------------------------
 // Button Styles
 //------------------------------------------------------------------------------
 const iosButton = {
