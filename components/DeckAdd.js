@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 
 import { white, coral, buttonStyles } from '../utils/styles';
 import { deckCreate } from '../actions';
+import * as api from '../utils/api';
 
 import Touchable from './Touchable';
 import KeyboardAdjustableView from './KeyboardAdjustableView';
@@ -49,7 +50,9 @@ class DeckAdd extends Component {
       return;
     }
 
-    this.props.deckCreate(name);
+
+    api.deckCreate(name).
+      then(() => this.props.deckCreate(name));
     this.props.navigation.goBack();
   }
 
