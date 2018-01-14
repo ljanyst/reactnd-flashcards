@@ -167,7 +167,9 @@ function deckControl(navigation) {
 //------------------------------------------------------------------------------
 function itemView(item, navigation) {
   return (
-    <Touchable style={styles.item}>
+    <Touchable
+      style={styles.item}
+    >
       <Text style={styles.label}>Question</Text>
       <Text style={styles.content}>{item.question}</Text>
       <View style={{margin: 5}}/>
@@ -182,14 +184,13 @@ function itemView(item, navigation) {
 //------------------------------------------------------------------------------
 class CardList extends Component {
   render() {
-    const deckId = this.props.navigation.state.params.deckId;
-    if(!(deckId in this.props.decks))
+    if(!this.props.deckId)
       return <View/>;
 
-    const cardList = this.props.decks[deckId].questions.map(item => {
+    const cardList = this.props.questions.map(item => {
       return { ...item, key: item.id };
     });
-    const numCards = this.props.decks[deckId].questions.length;
+    const numCards = this.props.questions.length;
     return (
       <View style={{flex: 1}}>
         <View style={{alignItems: 'center', marginTop: 20}}>
@@ -214,9 +215,15 @@ class CardList extends Component {
 //------------------------------------------------------------------------------
 // Connect redux
 //------------------------------------------------------------------------------
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
+  const deckId = ownProps.navigation.state.params.deckId;
+  if(!(deckId in state))
+    return {};
+
   return {
-    decks: state
+    ...state[deckId],
+    deckId,
+    numCards: state[deckId].questions.length
   };
 }
 
