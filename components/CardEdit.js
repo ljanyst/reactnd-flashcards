@@ -4,14 +4,18 @@
 //------------------------------------------------------------------------------
 
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TextInput } from 'react-native';
+import {
+  View, Text, StyleSheet, TextInput, Alert, Platform
+} from 'react-native';
 import { TextField } from 'react-native-material-textfield';
 import { connect } from 'react-redux';
+import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 
-import { white, coral, buttonStyles } from '../utils/styles';
-import { cardCreate } from '../actions';
+import { white, coral, buttonStyles, navBarStyles } from '../utils/styles';
+import { cardUpdate, cardRemove } from '../actions';
 import * as api from '../utils/api';
 import { makeId } from '../utils/helpers';
+import { store } from '../App';
 
 import Touchable from './Touchable';
 import KeyboardAdjustableView from './KeyboardAdjustableView';
@@ -28,6 +32,66 @@ const styles = StyleSheet.create({
 });
 
 //------------------------------------------------------------------------------
+// Add card control buttons
+//------------------------------------------------------------------------------
+function cardControl(navigation) {
+  //----------------------------------------------------------------------------
+  // Check if we should render the button
+  //----------------------------------------------------------------------------
+  const cardId = navigation.state.params.cardId;
+  if(!cardId)
+    return null;
+
+  //----------------------------------------------------------------------------
+  // Delete button
+  //----------------------------------------------------------------------------
+  const deleteButton = (
+    <View style={navBarStyles.btnContainer}>
+      <Touchable
+        onPress={() => {
+          Alert.alert('Warning',
+                      'Are you sure you want to delete the card?',
+                      [
+                        {
+                          text: 'Cancel'
+                        }, {
+                          text: 'OK',
+                          onPress: () => {
+                            const deckId = navigation.state.params.deckId;
+
+                            api.cardRemove(deckId, cardId)
+                              .then(() => {
+                                store.dispatch(cardRemove(deckId, cardId));
+                              })
+                              .then(() => navigation.goBack());
+                          }
+                        }
+                      ]);
+        }}
+      >
+        {
+          Platform.OS === 'ios'
+            ? <Ionicons
+                name='ios-trash-outline'
+                size={28}
+                style={navBarStyles.button}
+              />
+            : <MaterialIcons
+                name='delete'
+                size={28}
+                style={navBarStyles.button}
+              />
+        }
+      </Touchable>
+    </View>);
+
+  //----------------------------------------------------------------------------
+  // Complete component
+  //----------------------------------------------------------------------------
+  return deleteButton;
+}
+
+//------------------------------------------------------------------------------
 // Card Edit
 //------------------------------------------------------------------------------
 class CardEdit extends Component {
@@ -40,20 +104,37 @@ class CardEdit extends Component {
   };
 
   //----------------------------------------------------------------------------
-  // Add a card
+  // Update a card
   //----------------------------------------------------------------------------
-  cardAdd = () => {
+  cardUpdate = () => {
     const { question, answer } = this.state;
-    const id = makeId(10);
+    let id = makeId(10);
+    if(this.props.card)
+      id = this.props.card.id;
+
     const deckId = this.props.navigation.state.params.deckId;
     const card = {id, question, answer};
 
     if(question === '' || answer === '')
       return;
 
-    api.cardCreate(deckId, card)
-      .then(() => this.props.cardCreate(deckId, card));
+    api.cardUpdate(deckId, card)
+      .then(() => this.props.cardUpdate(deckId, card));
+
+    const refreshParent = this.props.navigation.state.params.refreshParent;
     this.props.navigation.goBack();
+  }
+
+  //----------------------------------------------------------------------------
+  // Component mounted
+  //----------------------------------------------------------------------------
+  componentDidMount() {
+    if(this.props.card) {
+      this.setState({
+        question: this.props.card.question,
+        answer: this.props.card.answer
+      });
+    }
   }
 
   //----------------------------------------------------------------------------
@@ -68,6 +149,7 @@ class CardEdit extends Component {
             baseColor={coral}
             label='Question'
             multiline
+            value={this.state.question}
             onChangeText={ text => this.setState({ question: text }) }
           />
           <TextField
@@ -75,11 +157,14 @@ class CardEdit extends Component {
             baseColor={coral}
             label='Answer'
             multiline
+            value={this.state.answer}
             onChangeText={ text => this.setState({ answer: text }) }
           />
 
-          <Touchable style={buttonStyles.button} onPress={this.cardAdd}>
-            <Text style={buttonStyles.text}>Add card</Text>
+          <Touchable style={buttonStyles.button} onPress={this.cardUpdate}>
+            <Text style={buttonStyles.text}>
+              {this.props.card ? 'Update' : 'Add'} card
+            </Text>
           </Touchable>
         </View>
       </KeyboardAdjustableView>
@@ -90,13 +175,19 @@ class CardEdit extends Component {
 //------------------------------------------------------------------------------
 // Connect redux
 //------------------------------------------------------------------------------
-function mapStateToProps(state) {
-  return {};
+function mapStateToProps(state, ownProps) {
+  const deckId = ownProps.navigation.state.params.deckId;
+  const cardId = ownProps.navigation.state.params.cardId;
+  if(!cardId)
+    return {};
+
+  const card = state[deckId].questions[cardId];
+  return { card };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    cardCreate: (deckId, card) => dispatch(cardCreate(deckId, card))
+    cardUpdate: (deckId, card) => dispatch(cardUpdate(deckId, card))
   };
 }
 
@@ -109,8 +200,12 @@ export default _CardEdit;
 export function cardEditNavBar() {
   return  {
     screen: _CardEdit,
-    navigationOptions: ({navigation}) => ({
-      title: 'Create a card'
-    })
+    navigationOptions: ({navigation}) => {
+      const cardId = navigation.state.params.cardId;
+      return {
+        title: cardId ? 'Edit card' : 'Create a card',
+        headerRight: cardControl(navigation)
+      };
+    }
   };
 }
