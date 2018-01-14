@@ -169,6 +169,14 @@ function itemView(item, navigation) {
   return (
     <Touchable
       style={styles.item}
+      onPress={() => {
+        navigation.navigate('CardEdit',
+                            {
+                              deckId: navigation.state.params.deckId,
+                              cardId: item.id
+                            });
+
+      }}
     >
       <Text style={styles.label}>Question</Text>
       <Text style={styles.content}>{item.question}</Text>
@@ -187,10 +195,11 @@ class CardList extends Component {
     if(!this.props.deckId)
       return <View/>;
 
-    const cardList = this.props.questions.map(item => {
-      return { ...item, key: item.id };
+    const cardList = Object.keys(this.props.questions).map(key => {
+      const item = this.props.questions[key];
+      return { ...item, key };
     });
-    const numCards = this.props.questions.length;
+
     return (
       <View style={{flex: 1}}>
         <View style={{alignItems: 'center', marginTop: 20}}>
@@ -199,7 +208,7 @@ class CardList extends Component {
             <Text
               style={[styles.content, {fontSize: 18, marginLeft: 10}]}
             >
-              {numCards}
+              {this.props.numCards}
             </Text>
           </View>
         </View>
@@ -223,7 +232,7 @@ function mapStateToProps(state, ownProps) {
   return {
     ...state[deckId],
     deckId,
-    numCards: state[deckId].questions.length
+    numCards: Object.keys(state[deckId].questions).length
   };
 }
 

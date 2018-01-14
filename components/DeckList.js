@@ -105,7 +105,7 @@ function mapStateToProps(state) {
       return {
         key: deckId,
         title: deckId,
-        numCards: state[deckId].questions.length
+        numCards: Object.keys(state[deckId].questions).length
       };
     })
   };
