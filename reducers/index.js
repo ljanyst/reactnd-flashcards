@@ -18,7 +18,7 @@ export default function reducer(state={}, action) {
       ...state,
       [action.name]: {
         title: action.name,
-        questions: []
+        questions: {}
       }
     };
 
@@ -29,7 +29,7 @@ export default function reducer(state={}, action) {
 
   case CARD_CREATE:
     var cardCreateState = Object.assign({}, state);
-    cardCreateState[action.deckId].questions.push(action.card);
+    cardCreateState[action.deckId].questions[action.card.id] = action.card;
     return cardCreateState;
 
   default:
