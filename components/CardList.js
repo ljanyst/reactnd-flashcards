@@ -89,7 +89,11 @@ function deckControl(navigation) {
   //----------------------------------------------------------------------------
   const addButton = (
     <View style={navBarStyles.btnContainer}>
-      <Touchable onPress={() => {}}>
+      <Touchable
+        onPress={() => {
+          navigation.navigate('CardAdd',
+                              {deckId: navigation.state.params.deckId});
+        }}>
         {
           Platform.OS === 'ios'
             ? <Ionicons

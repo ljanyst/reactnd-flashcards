@@ -18,6 +18,7 @@ import reducer from './reducers';
 import DeckList, { deckListNavBar } from './components/DeckList';
 import DeckAdd, { deckAddNavBar } from './components/DeckAdd';
 import CardList, { cardListNavBar } from './components/CardList';
+import CardAdd, { cardAddNavBar } from './components/CardAdd';
 
 //------------------------------------------------------------------------------
 // Redux
@@ -41,7 +42,8 @@ function FlashCardsStatusBar( {backgroundColor, ...props} ) {
 const MainNavigator = StackNavigator({
   DeckList: deckListNavBar(),
   DeckAdd: deckAddNavBar(),
-  CardList: cardListNavBar()
+  CardList: cardListNavBar(),
+  CardAdd: cardAddNavBar()
 }, {
   navigationOptions: ({navigation}) => ({
     headerTintColor: navBarFgColor,
