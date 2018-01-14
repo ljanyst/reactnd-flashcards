@@ -4,7 +4,7 @@
 //------------------------------------------------------------------------------
 
 import {
-  DECK_SET_DB, DECK_CREATE, DECK_REMOVE, CARD_UPDATE
+  DECK_SET_DB, DECK_CREATE, DECK_REMOVE, CARD_UPDATE, CARD_REMOVE
 } from '../actions';
 
 export default function reducer(state={}, action) {
@@ -31,6 +31,11 @@ export default function reducer(state={}, action) {
     var cardCreateState = Object.assign({}, state);
     cardCreateState[action.deckId].questions[action.card.id] = action.card;
     return cardCreateState;
+
+  case CARD_REMOVE:
+    let cardRemoveState = Object.assign({}, state);
+    delete cardRemoveState[action.deckId].questions[action.cardId];
+    return cardRemoveState;
 
   default:
     return state;

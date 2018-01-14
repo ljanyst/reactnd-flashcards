@@ -7,6 +7,7 @@ export const DECK_SET_DB = 'DECK_SET_DB';
 export const DECK_CREATE = 'DECK_CREATE';
 export const DECK_REMOVE = 'DECK_REMOVE';
 export const CARD_UPDATE = 'CARD_UPDATE';
+export const CARD_REMOVE = 'CARD_REMOVE';
 
 export function deckSetDb(db) {
   return {
@@ -34,5 +35,13 @@ export function cardUpdate(deckId, card) {
     type: CARD_UPDATE,
     deckId,
     card
+  };
+}
+
+export function cardRemove(deckId, cardId) {
+  return {
+    type: CARD_REMOVE,
+    deckId,
+    cardId
   };
 }
