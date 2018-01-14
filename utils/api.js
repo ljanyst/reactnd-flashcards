@@ -35,3 +35,16 @@ export function deckCreate(deckName) {
     .then(JSON.stringify)
     .then(data => AsyncStorage.setItem(STORAGE_KEY, data));
 }
+
+//------------------------------------------------------------------------------
+// Remove deck
+//------------------------------------------------------------------------------
+export function deckRemove(deckName) {
+  return fetchData()
+    .then(data => {
+      delete data[deckName];
+      return data;
+    })
+    .then(JSON.stringify)
+    .then(data => AsyncStorage.setItem(STORAGE_KEY, data));
+}
