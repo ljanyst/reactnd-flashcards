@@ -130,7 +130,7 @@ function deckControl(navigation) {
     <View style={navBarStyles.btnContainer}>
       <Touchable
         onPress={() => {
-          navigation.navigate('CardAdd',
+          navigation.navigate('CardEdit',
                               {deckId: navigation.state.params.deckId});
         }}>
         {

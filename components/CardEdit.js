@@ -28,9 +28,9 @@ const styles = StyleSheet.create({
 });
 
 //------------------------------------------------------------------------------
-// Card Add
+// Card Edit
 //------------------------------------------------------------------------------
-class CardAdd extends Component {
+class CardEdit extends Component {
   //----------------------------------------------------------------------------
   // The state
   //----------------------------------------------------------------------------
@@ -100,15 +100,15 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-const _CardAdd = connect(mapStateToProps, mapDispatchToProps)(CardAdd);
-export default _CardAdd;
+const _CardEdit = connect(mapStateToProps, mapDispatchToProps)(CardEdit);
+export default _CardEdit;
 
 //------------------------------------------------------------------------------
 // Navbar
 //------------------------------------------------------------------------------
-export function cardAddNavBar() {
+export function cardEditNavBar() {
   return  {
-    screen: _CardAdd,
+    screen: _CardEdit,
     navigationOptions: ({navigation}) => ({
       title: 'Create a card'
     })
