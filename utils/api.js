@@ -29,7 +29,7 @@ export function deckCreate(deckName) {
       ...data,
       [deckName]: {
         title: deckName,
-        questions: []
+        questions: {}
       }
     }))
     .then(JSON.stringify)
@@ -57,7 +57,7 @@ export function cardCreate(deckId, card) {
     .then(data => {
       if(!(deckId in data))
         throw(Error(`Deck with ID ${deckId} does not exist`));
-      data[deckId].questions.push(card);
+      data[deckId].questions[card.id] = card;
       return data;
     })
     .then(JSON.stringify)
