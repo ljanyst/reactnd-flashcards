@@ -22,7 +22,7 @@ import CardList, { cardListNavBar } from './components/CardList';
 //------------------------------------------------------------------------------
 // Redux
 //------------------------------------------------------------------------------
-const store = createStore(reducer);
+export const store = createStore(reducer);
 
 //------------------------------------------------------------------------------
 // Status Bar
