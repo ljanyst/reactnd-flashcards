@@ -71,7 +71,7 @@ function itemView(item, navigation) {
   return (
     <Touchable
       style={styles.item}
-      onPress={() => navigation.navigate('CardList', {cardId: item.key})}
+      onPress={() => navigation.navigate('CardList', {deckId: item.key})}
     >
       <Text style={styles.title}>{item.title}</Text>
       <Text style={styles.cardCounter}>Cards: {item.numCards}</Text>

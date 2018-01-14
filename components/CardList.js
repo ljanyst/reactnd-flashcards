@@ -82,7 +82,7 @@ class CardList extends Component {
   render() {
     return (
       <View>
-        <Text>{this.props.navigation.state.params.cardId}</Text>
+        <Text>{this.props.navigation.state.params.deckId}</Text>
       </View>
     );
   }
@@ -109,7 +109,7 @@ export function cardListNavBar() {
   return {
     screen: _CardList,
     navigationOptions: ({navigation}) => ({
-      title: navigation.state.params.cardId,
+      title: navigation.state.params.deckId,
       headerRight: deckControl(navigation)
     })
   };
