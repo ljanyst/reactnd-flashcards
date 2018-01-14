@@ -4,7 +4,9 @@
 //------------------------------------------------------------------------------
 
 import React, { Component } from 'react';
-import { View, Text, Platform, Alert } from 'react-native';
+import {
+  View, Text, Platform, Alert, FlatList, StyleSheet
+} from 'react-native';
 import { connect } from 'react-redux';
 import {
   MaterialIcons, Ionicons, MaterialCommunityIcons
@@ -14,8 +16,45 @@ import { navBarStyles } from '../utils/styles';
 import { store } from '../App';
 import { deckRemove } from '../actions';
 import * as api from '../utils/api';
+import { white, coral, gray } from '../utils/styles';
 
 import Touchable from './Touchable';
+
+//------------------------------------------------------------------------------
+// Styles
+//------------------------------------------------------------------------------
+const styles = StyleSheet.create({
+  item: {
+    backgroundColor: white,
+    borderRadius: Platform.OS === 'ios' ? 10 : 2,
+    padding: 20,
+    marginLeft: 15,
+    marginRight: 15,
+    marginTop: 17,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowRadius: 3,
+    shadowOpacity: 0.8,
+    shadowColor: 'rgba(0,0,0,0.24)',
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    elevation: 1
+  },
+
+  label: {
+    color: coral,
+    fontSize: 18
+  },
+
+  content: {
+    color: gray,
+    fontSize: 16,
+    textAlign: 'center'
+  }
+
+});
 
 //------------------------------------------------------------------------------
 // Add deck control buttons
@@ -124,13 +163,49 @@ function deckControl(navigation) {
 }
 
 //------------------------------------------------------------------------------
+// Render item
+//------------------------------------------------------------------------------
+function itemView(item, navigation) {
+  return (
+    <Touchable style={styles.item}>
+      <Text style={styles.label}>Question</Text>
+      <Text style={styles.content}>{item.question}</Text>
+      <View style={{margin: 5}}/>
+      <Text style={styles.label}>Answer</Text>
+      <Text style={styles.content}>{item.answer}</Text>
+    </Touchable>
+  );
+}
+
+//------------------------------------------------------------------------------
 // Card List
 //------------------------------------------------------------------------------
 class CardList extends Component {
   render() {
+    const deckId = this.props.navigation.state.params.deckId;
+    if(!(deckId in this.props.decks))
+      return <View/>;
+
+    const cardList = this.props.decks[deckId].questions.map(item => {
+      return { ...item, key: item.id };
+    });
+    const numCards = this.props.decks[deckId].questions.length;
     return (
-      <View>
-        <Text>{this.props.navigation.state.params.deckId}</Text>
+      <View style={{flex: 1}}>
+        <View style={{alignItems: 'center', marginTop: 20}}>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={styles.label}>Number of cards:</Text>
+            <Text
+              style={[styles.content, {fontSize: 18, marginLeft: 10}]}
+            >
+              {numCards}
+            </Text>
+          </View>
+        </View>
+        <FlatList
+          data={cardList}
+          renderItem={({item}) => itemView(item, this.props.navigation)}
+        />
       </View>
     );
   }
@@ -140,7 +215,9 @@ class CardList extends Component {
 // Connect redux
 //------------------------------------------------------------------------------
 function mapStateToProps(state) {
-  return {};
+  return {
+    decks: state
+  };
 }
 
 function mapDispatchToProps(dispatch) {
