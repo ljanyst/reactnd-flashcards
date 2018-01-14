@@ -4,13 +4,16 @@
 //------------------------------------------------------------------------------
 
 import React, { Component } from 'react';
-import { View, Text, Platform } from 'react-native';
+import { View, Text, Platform, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import {
   MaterialIcons, Ionicons, MaterialCommunityIcons
 } from '@expo/vector-icons';
 
 import { navBarStyles } from '../utils/styles';
+import { store } from '../App';
+import { deckRemove } from '../actions';
+import * as api from '../utils/api';
 
 import Touchable from './Touchable';
 
@@ -18,59 +21,100 @@ import Touchable from './Touchable';
 // Add deck control buttons
 //------------------------------------------------------------------------------
 function deckControl(navigation) {
+  //----------------------------------------------------------------------------
+  // Quiz button
+  //----------------------------------------------------------------------------
+  const quizButton = (
+    <View style={navBarStyles.btnContainer}>
+      <Touchable onPress={() => {}}>
+        {
+          Platform.OS === 'ios'
+            ? <Ionicons
+                name='ios-school-outline'
+                size={28}
+                  style={[navBarStyles.button]}
+              />
+            : <MaterialIcons
+                name='school'
+                size={28}
+                style={navBarStyles.button}
+              />
+        }
+      </Touchable>
+    </View>
+  );
+
+  //----------------------------------------------------------------------------
+  // Delete button
+  //----------------------------------------------------------------------------
+  const deleteButton = (
+    <View style={navBarStyles.btnContainer}>
+      <Touchable
+        onPress={() => {
+          Alert.alert('Warning',
+                      'Are you sure you want to delete the deck?',
+                      [
+                        {
+                          text: 'Cancel'
+                        }, {
+                          text: 'OK',
+                          onPress: () => {
+                            const deckId = navigation.state.params.deckId;
+                            api.deckRemove(deckId)
+                              .then(() => store.dispatch(deckRemove(deckId)))
+                              .then(() => navigation.goBack());
+                          }
+                        }
+                      ]);
+        }}
+      >
+        {
+          Platform.OS === 'ios'
+            ? <Ionicons
+                name='ios-trash-outline'
+                size={28}
+                style={navBarStyles.button}
+              />
+            : <MaterialIcons
+                name='delete'
+                size={28}
+                style={navBarStyles.button}
+              />
+        }
+      </Touchable>
+    </View>);
+
+  //----------------------------------------------------------------------------
+  // Add button
+  //----------------------------------------------------------------------------
+  const addButton = (
+    <View style={navBarStyles.btnContainer}>
+      <Touchable onPress={() => {}}>
+        {
+          Platform.OS === 'ios'
+            ? <Ionicons
+                name='ios-add'
+                size={28}
+                style={navBarStyles.button}
+              />
+            : <MaterialIcons
+                name='add'
+                size={28}
+                style={navBarStyles.button}
+              />
+        }
+      </Touchable>
+    </View>
+  );
+
+  //----------------------------------------------------------------------------
+  // Complete component
+  //----------------------------------------------------------------------------
   return (
     <View style={navBarStyles.btnsContainer}>
-      <View style={navBarStyles.btnContainer}>
-        <Touchable onPress={() => {}}>
-          {
-            Platform.OS === 'ios'
-              ? <Ionicons
-                  name='ios-school-outline'
-                  size={28}
-                  style={navBarStyles.button}
-                />
-              : <MaterialIcons
-                  name='school'
-                  size={28}
-                  style={navBarStyles.button}
-                />
-          }
-        </Touchable>
-      </View>
-      <View style={navBarStyles.btnContainer}>
-        <Touchable onPress={() => {}}>
-          {
-            Platform.OS === 'ios'
-              ? <Ionicons
-                  name='ios-trash-outline'
-                  size={28}
-                  style={navBarStyles.button}
-                />
-              : <MaterialIcons
-                  name='delete'
-                  size={28}
-                  style={navBarStyles.button}
-                />
-          }
-        </Touchable>
-      </View>
-      <View style={navBarStyles.btnContainer}>
-        <Touchable onPress={() => {}}>
-          {
-            Platform.OS === 'ios'
-              ? <Ionicons
-                  name='ios-add'
-                  size={28}
-                  style={navBarStyles.button}
-                />
-              : <MaterialIcons
-                  name='add'
-                  size={28}
-                  style={navBarStyles.button}
-                />
-          }
-        </Touchable>
-      </View>
+      {quizButton}
+      {deleteButton}
+      {addButton}
     </View>
   );
 }
