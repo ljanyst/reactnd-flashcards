@@ -48,3 +48,18 @@ export function deckRemove(deckName) {
     .then(JSON.stringify)
     .then(data => AsyncStorage.setItem(STORAGE_KEY, data));
 }
+
+//------------------------------------------------------------------------------
+// Create a card
+//------------------------------------------------------------------------------
+export function cardCreate(deckId, card) {
+  return fetchData()
+    .then(data => {
+      if(!(deckId in data))
+        throw(Error(`Deck with ID ${deckId} does not exist`));
+      data[deckId].questions.push(card);
+      return data;
+    })
+    .then(JSON.stringify)
+    .then(data => AsyncStorage.setItem(STORAGE_KEY, data));
+}
