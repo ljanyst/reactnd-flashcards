@@ -50,9 +50,9 @@ export function deckRemove(deckName) {
 }
 
 //------------------------------------------------------------------------------
-// Create a card
+// Update a card
 //------------------------------------------------------------------------------
-export function cardCreate(deckId, card) {
+export function cardUpdate(deckId, card) {
   return fetchData()
     .then(data => {
       if(!(deckId in data))
