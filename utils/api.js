@@ -63,3 +63,20 @@ export function cardUpdate(deckId, card) {
     .then(JSON.stringify)
     .then(data => AsyncStorage.setItem(STORAGE_KEY, data));
 }
+
+//------------------------------------------------------------------------------
+// Remove a card
+//------------------------------------------------------------------------------
+export function cardRemove(deckId, cardId) {
+  return fetchData()
+    .then(data => {
+      if(!(deckId in data))
+        throw(Error(`Deck with ID ${deckId} does not exist`));
+      if(!(cardId in data[deckId].questions))
+        throw(Error(`Card with ID ${cardId} does not exist in deck ${deckId}`));
+      delete data[deckId].questions[cardId];
+      return data;
+    })
+    .then(JSON.stringify)
+    .then(data => AsyncStorage.setItem(STORAGE_KEY, data));
+}
