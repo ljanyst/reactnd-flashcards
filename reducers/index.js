@@ -3,7 +3,7 @@
 // Date: 12.01.2018
 //------------------------------------------------------------------------------
 
-import { DECK_SET_DB, DECK_CREATE } from '../actions';
+import { DECK_SET_DB, DECK_CREATE, DECK_REMOVE } from '../actions';
 
 export default function reducer(state={}, action) {
   switch(action.type) {
@@ -19,6 +19,11 @@ export default function reducer(state={}, action) {
         questions: []
       }
     };
+
+  case DECK_REMOVE:
+    var deckRemoveState = Object.assign({}, state);
+    delete deckRemoveState[action.name];
+    return deckRemoveState;
 
   default:
     return state;
