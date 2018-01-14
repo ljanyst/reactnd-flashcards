@@ -230,6 +230,7 @@ function mapStateToProps(state, ownProps) {
     return {};
 
   return {
+    random: Math.random(),
     ...state[deckId],
     deckId,
     numCards: Object.keys(state[deckId].questions).length
