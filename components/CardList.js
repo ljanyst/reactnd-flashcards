@@ -65,7 +65,12 @@ function deckControl(navigation) {
   //----------------------------------------------------------------------------
   const quizButton = (
     <View style={navBarStyles.btnContainer}>
-      <Touchable onPress={() => {}}>
+      <Touchable
+        onPress={() => {
+          navigation.navigate('Quiz',
+                              {deckId: navigation.state.params.deckId});
+        }}
+      >
         {
           Platform.OS === 'ios'
             ? <Ionicons

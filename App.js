@@ -19,6 +19,7 @@ import DeckList, { deckListNavBar } from './components/DeckList';
 import DeckAdd, { deckAddNavBar } from './components/DeckAdd';
 import CardList, { cardListNavBar } from './components/CardList';
 import CardEdit, { cardEditNavBar } from './components/CardEdit';
+import Quiz, { quizNavBar } from './components/Quiz';
 
 //------------------------------------------------------------------------------
 // Redux
@@ -43,7 +44,8 @@ const MainNavigator = StackNavigator({
   DeckList: deckListNavBar(),
   DeckAdd: deckAddNavBar(),
   CardList: cardListNavBar(),
-  CardEdit: cardEditNavBar()
+  CardEdit: cardEditNavBar(),
+  Quiz: quizNavBar()
 }, {
   navigationOptions: ({navigation}) => ({
     headerTintColor: navBarFgColor,
