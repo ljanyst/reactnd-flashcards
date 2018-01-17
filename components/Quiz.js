@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, Slider } from 'react-native';
 import { connect } from 'react-redux';
 
-import { coral, gray, buttonStyles } from '../utils/styles';
+import { coral, gray, buttonStyles, cardStyles } from '../utils/styles';
 import { shuffle } from '../utils/helpers';
 
 import Touchable from './Touchable';
@@ -39,6 +39,11 @@ const styles = StyleSheet.create({
   numView: {
     alignItems: 'center',
     width: '100%'
+  },
+  button: {
+    alignSelf: null,
+    margin: 10,
+    width: '80%'
   }
 });
 
@@ -54,7 +59,36 @@ class Quiz extends Component {
     correct: 0,
     total: 0,
     questions: [],
-    numQuestionsSlider: 1
+    numQuestionsSlider: 1,
+    showAnswer: false
+  };
+
+  //----------------------------------------------------------------------------
+  // Flip card
+  //----------------------------------------------------------------------------
+  flipCard = () => {
+    this.setState(state => ({ showAnswer: !state.showAnswer }));
+  };
+
+  //----------------------------------------------------------------------------
+  // Correct answer
+  //----------------------------------------------------------------------------
+  correctAnswer = () => {
+    this.setState(state => ({
+      showAnswer: false,
+      asked: state.asked+1,
+      correct: state.correct+1
+    }));
+  };
+
+  //----------------------------------------------------------------------------
+  // Incorrect answer
+  //----------------------------------------------------------------------------
+  incorrectAnswer = () => {
+    this.setState(state => ({
+      showAnswer: false,
+      asked: state.asked+1
+    }));
   };
 
   //----------------------------------------------------------------------------
@@ -130,11 +164,74 @@ class Quiz extends Component {
     }
 
     //--------------------------------------------------------------------------
+    // Display a card
+    //--------------------------------------------------------------------------
+    if(this.state.total !== this.state.asked) {
+      const label = this.state.showAnswer ? 'Answer' : 'Question';
+      const card = this.state.questions[this.state.asked];
+      const content = this.state.showAnswer ? card.answer : card.question;
+      return (
+        <View style={styles.container}>
+          <View style={{alignItems: 'center'}}>
+            <View style={{flexDirection: 'row'}}>
+              <Text style={cardStyles.label}>Progress:</Text>
+              <Text
+                style={[cardStyles.content, {fontSize: 18, marginLeft: 10}]}
+              >
+                {this.state.asked}/{this.state.total}
+              </Text>
+            </View>
+          </View>
+
+          <View style={[cardStyles.card, {width: '100%', padding: 50}]}>
+            <Text style={cardStyles.label}>{label}</Text>
+            <Text style={cardStyles.content}>{content}</Text>
+          </View>
+
+          <View style={{width: '100%', alignItems: 'center'}}>
+            <Touchable
+              style={[buttonStyles.button, styles.button]}
+              onPress={this.flipCard}
+            >
+              <Text style={buttonStyles.text}>Show Answer</Text>
+            </Touchable>
+            <Touchable
+              style={[
+                buttonStyles.button,
+                styles.button,
+                {backgroundColor: '#3cb371'}
+              ]}
+              onPress={this.correctAnswer}
+            >
+              <Text style={buttonStyles.text}>Correct</Text>
+            </Touchable>
+
+            <Touchable
+              style={[
+                buttonStyles.button,
+                styles.button,
+                {backgroundColor: '#b22222'}
+              ]}
+              onPress={this.incorrectAnswer}
+            >
+              <Text style={buttonStyles.text}>Incorrect</Text>
+            </Touchable>
+          </View>
+        </View>
+      );
+    }
+
+    //--------------------------------------------------------------------------
     // Card view
     //--------------------------------------------------------------------------
     return (
-      <View>
-        <Text>Not empty.</Text>
+      <View style={[styles.container, {justifyContent: 'center'}]}>
+        <Text style={[cardStyles.label, {fontSize: 64}]}>
+          Your score:
+        </Text>
+        <Text style={[cardStyles.content, {fontSize: 96}]}>
+          {this.state.correct}/{this.state.total}
+        </Text>
       </View>
     );
   }
