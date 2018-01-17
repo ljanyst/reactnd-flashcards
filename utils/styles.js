@@ -62,3 +62,39 @@ export const buttonStyles = StyleSheet.create({
     textAlign: 'center'
   }
 });
+
+//------------------------------------------------------------------------------
+// Card styles
+//------------------------------------------------------------------------------
+export const cardStyles = StyleSheet.create({
+  card: {
+    backgroundColor: white,
+    borderRadius: Platform.OS === 'ios' ? 10 : 2,
+    padding: 20,
+    marginLeft: 15,
+    marginRight: 15,
+    marginTop: 17,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowRadius: 3,
+    shadowOpacity: 0.8,
+    shadowColor: 'rgba(0,0,0,0.24)',
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    elevation: 1
+  },
+
+  label: {
+    color: coral,
+    fontSize: 18,
+    textAlign: 'center'
+  },
+
+  content: {
+    color: gray,
+    fontSize: 16,
+    textAlign: 'center'
+  }
+});
