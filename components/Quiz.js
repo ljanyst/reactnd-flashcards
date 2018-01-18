@@ -178,7 +178,7 @@ class Quiz extends Component {
               <Text
                 style={[cardStyles.content, {fontSize: 18, marginLeft: 10}]}
               >
-                {this.state.asked}/{this.state.total}
+                {this.state.asked+1}/{this.state.total}
               </Text>
             </View>
           </View>
