@@ -7,6 +7,7 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, TextInput } from 'react-native';
 import { TextField } from 'react-native-material-textfield';
 import { connect } from 'react-redux';
+import { NavigationActions } from 'react-navigation';
 
 import { white, coral, buttonStyles } from '../utils/styles';
 import { deckCreate } from '../actions';
@@ -53,7 +54,17 @@ class DeckAdd extends Component {
 
     api.deckCreate(name).
       then(() => this.props.deckCreate(name));
-    this.props.navigation.goBack();
+
+    const resetAction = NavigationActions.reset({
+      index: 0,
+      actions: [
+        NavigationActions.navigate({
+          routeName: 'CardList',
+          params: {deckId: name}
+        })
+      ]
+    });
+    this.props.navigation.dispatch(resetAction);
   }
 
   //----------------------------------------------------------------------------
