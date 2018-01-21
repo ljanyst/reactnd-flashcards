@@ -56,8 +56,11 @@ class DeckAdd extends Component {
       then(() => this.props.deckCreate(name));
 
     const resetAction = NavigationActions.reset({
-      index: 0,
+      index: 1,
       actions: [
+        NavigationActions.navigate({
+          routeName: 'DeckList'
+        }),
         NavigationActions.navigate({
           routeName: 'CardList',
           params: {deckId: name}
