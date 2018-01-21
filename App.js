@@ -11,6 +11,7 @@ import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 
 import { coral, navBarFgColor, navBarBgColor } from './utils/styles';
+import { setLocalNotification } from './utils/notifications';
 import { fetchData } from './utils/api';
 import { deckSetDb } from './actions';
 import reducer from './reducers';
@@ -64,6 +65,7 @@ export default class App extends Component {
   //----------------------------------------------------------------------------
   componentDidMount() {
     fetchData().then(data => store.dispatch(deckSetDb(data)));
+    setLocalNotification();
   }
 
   //----------------------------------------------------------------------------

@@ -9,6 +9,9 @@ import { connect } from 'react-redux';
 
 import { coral, gray, buttonStyles, cardStyles } from '../utils/styles';
 import { shuffle } from '../utils/helpers';
+import {
+  setLocalNotification, clearLocalNotification
+} from '../utils/notifications';
 
 import Touchable from './Touchable';
 
@@ -239,8 +242,10 @@ class Quiz extends Component {
     }
 
     //--------------------------------------------------------------------------
-    // Card view
+    // Score view
     //--------------------------------------------------------------------------
+    clearLocalNotification();
+    setLocalNotification();
     return (
       <View style={styles.container}>
         <Text style={[cardStyles.label, {fontSize: 64}]}>
