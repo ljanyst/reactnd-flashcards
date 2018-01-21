@@ -71,6 +71,34 @@ class Quiz extends Component {
   };
 
   //----------------------------------------------------------------------------
+  // Restart quiz
+  //----------------------------------------------------------------------------
+  restartQuiz = () => {
+    const numQuestions = this.props.questions.length;
+    const defaultNumQuestions = numQuestions > 10 ? 10 : numQuestions;
+    const defaultState = {
+      asked: 0,
+      correct: 0,
+      total: 0,
+      questions: [],
+      showAnswer: false
+    };
+
+    if(this.props.questions.length === 1)
+      this.setState({
+        ...defaultState,
+        numQuestionsSlider: defaultNumQuestions,
+        total: 1,
+        questions: shuffle(this.props.questions)
+      });
+    else
+      this.setState({
+        ...defaultState,
+        numQuestionsSlider: defaultNumQuestions
+      });
+  };
+
+  //----------------------------------------------------------------------------
   // Correct answer
   //----------------------------------------------------------------------------
   correctAnswer = () => {
@@ -95,18 +123,7 @@ class Quiz extends Component {
   // Component will receive props
   //----------------------------------------------------------------------------
   componentWillMount() {
-    const numQuestions = this.props.questions.length;
-    const defaultNumQuestions = numQuestions > 10 ? 10 : numQuestions;
-    if(this.props.questions.length === 1)
-      this.setState({
-        numQuestionsSlider: defaultNumQuestions,
-        total: 1,
-        questions: this.props.questions
-      });
-    else
-      this.setState({
-        numQuestionsSlider: defaultNumQuestions
-      });
+    this.restartQuiz();
   }
 
   //----------------------------------------------------------------------------
@@ -154,7 +171,7 @@ class Quiz extends Component {
               const numQuestions = this.state.numQuestionsSlider;
               this.setState({
                 total: numQuestions,
-                questions: this.props.questions.slice(0, numQuestions)
+                questions: shuffle(this.props.questions).slice(0, numQuestions)
               });
             }}
           >
@@ -225,13 +242,19 @@ class Quiz extends Component {
     // Card view
     //--------------------------------------------------------------------------
     return (
-      <View style={[styles.container, {justifyContent: 'center'}]}>
+      <View style={styles.container}>
         <Text style={[cardStyles.label, {fontSize: 64}]}>
           Your score:
         </Text>
         <Text style={[cardStyles.content, {fontSize: 96}]}>
           {this.state.correct}/{this.state.total}
         </Text>
+        <Touchable
+          style={[buttonStyles.button, styles.button]}
+          onPress={this.restartQuiz}
+        >
+          <Text style={buttonStyles.text}>Restart</Text>
+        </Touchable>
       </View>
     );
   }
@@ -244,7 +267,7 @@ function mapStateToProps(state, ownProps) {
   const deckId = ownProps.navigation.state.params.deckId;
   const questions = state[deckId].questions;
   return {
-    questions: shuffle(Object.keys(questions).map(key => questions[key]))
+    questions: Object.keys(questions).map(key => questions[key])
   };
 }
 
